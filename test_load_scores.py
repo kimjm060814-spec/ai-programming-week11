@@ -139,30 +139,3 @@ def test_잘못된_입력을_제외하고_기록한다(
 
     assert kept == []
     assert skipped == [(2, data_line, expected_reason)]
-# 추가 검사: 잘못된 입력을 제외하고 사유를 기록하는지 확인
-@pytest.mark.parametrize(
-    "data_line, expected_reason",
-    [
-        ("홍길동,80,추가", "열 개수가 2가 아님"),
-        (",80", "이름이 비어 있음"),
-        ("홍길동,", "점수가 비어 있음"),
-        ("홍길동,결석", "점수가 정수가 아님"),
-    ],
-)
-def test_잘못된_입력을_제외하고_기록한다(
-    tmp_path, data_line, expected_reason
-):
-    path = tmp_path / "invalid.csv"
-    path.write_text(
-        f"name,score\n{data_line}\n",
-        encoding="utf-8",
-    )
-
-    kept, skipped = load_scores(path)
-
-    print("입력:", data_line)
-    print("유효 데이터:", kept)
-    print("제외 기록:", skipped)
-
-    assert kept == []
-    assert skipped == [(2, data_line, expected_reason)]
